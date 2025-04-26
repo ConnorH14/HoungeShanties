@@ -1,30 +1,21 @@
 import discord
-from discord.ext import commands
-import asyncio
-from bot.config import TOKEN
+from bot.config import TOKEN, GUILD_ID
+from bot.utils.loader import load_commands
 
 intents = discord.Intents.default()
 intents.message_content = True
+client = discord.Client(intents=intents)
+tree = discord.app_commands.CommandTree(client)
 
-bot = commands.Bot(command_prefix="!", intents=intents)
-
-async def load_extensions():
-  initial_extensions = [
-    'bot.commands.ping',
-    'bot.events.on_ready',
-  ]
-
-  for extension in initial_extensions:
-    await bot.load_extension(extension)
-
-@bot.event
+@client.event
 async def on_ready():
-  await print(f"Logged in as {bot.user}!")
+  await tree.sync(guild=discord.Object(id=GUILD_ID))
+  print(f"Logged in as {client.user} (ID: {client.user.id})")
+  print(f"Synced commands to guild {GUILD_ID}")
+  print("--------------------")
 
-async def main():
-  async with bot:
-    await load_extensions()
-    await bot.start(TOKEN)
+@client.event
+async def on_connect():
+  await load_commands(tree, GUILD_ID)
 
-if __name__ == "__main__":
-  asyncio.run(main())
+client.run(TOKEN)

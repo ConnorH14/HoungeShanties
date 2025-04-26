@@ -1,12 +1,12 @@
-from discord.ext import commands
+import discord
 
-class PingCommands(commands.Cog):
-  def __init__(self, bot):
-    self.bot = bot
+@discord.app_commands.command(
+  name="ping",
+  description="Responds with Ping 3!"
+)
 
-  @commands.command(name="ping")
-  async def ping(self, ctx):
-    await ctx.send(f"Ping {ctx.author.mention}")
+async def ping(interaction: discord.Interaction):
+  await interaction.response.send_message("Ping!")
 
-async def setup(bot):
-  await bot.add_cog(PingCommands(bot))
+async def setup(tree: discord.app_commands.CommandTree, guild_id: int):
+  tree.add_command(ping, guild=discord.Object(id=guild_id))
