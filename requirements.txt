@@ -1,2 +1,7 @@
 discord.py==2.5.2
 python-dotenv==1.1.0
+pynacl==1.5.0
+yt-dlp==2025.4.30
+# ffmpeg is required to be installed on the system and added to PATH
+# running on python 3.12.3
+# setup using pip 24.0
